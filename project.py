@@ -29,6 +29,8 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+## login, gconnect & gdisconnect credits to the authentication course
+
 # Create anti-forgery state token
 @app.route('/login')
 def showLogin():
@@ -96,7 +98,7 @@ def gconnect():
         return response
 
     # Store the access token in the session for later use.
-    login_session['credentials'] = credentials
+    login_session['credentials'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
     # Get user info
@@ -201,7 +203,7 @@ def showTodos():
         return redirect('/login')
     todos = session.query(TodoItem)
     categories = session.query(Category)
-    return render_template('todos.html', todos=todos, categories=categories)
+    return render_template('todos.html', todos=todos, categories=categories, user_id=login_session['user_id'])
 
 # delete a todo
 @app.route('/todo/<int:todo_id>/delete', methods=['GET'])
