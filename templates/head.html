@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col-sm-12 text-center">
+    <h1>
+      Family todos
+    </h1>
+    <div>Description: Anyone can add and complete a todo, but only the creator can delete it.</div>
+    <div class="flash">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul>
+          {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </div>
+    <a href="{{url_for('gdisconnect')}}">Logout</a>
+  </div>
+</div>

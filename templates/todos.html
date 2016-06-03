@@ -1,0 +1,25 @@
+{% extends "main.html" %}
+{% include "head.html" %}
+{% block content %}
+  {% for category in categories %}
+    <div class="row">
+      <div class="col-xs-12 text-center">
+        <h2>
+          {{category.name}} <a href="{{url_for('newTodo', category_id=category.id)}}">+</a>
+        </h2>
+        {% for todo in todos %}
+          {% if todo.category_id == category.id %}
+            <div class="row text-left">
+              <div class="col-xs-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+                {% if todo.status %}<strike>{% endif %}
+                  <a href="{{url_for('toggleTodo', todo_id=todo.id)}}">{{todo.name}}</a>
+                  <a style="float:right" href="{{url_for('deleteTodo', todo_id=todo.id)}}">Delete</a>
+                {% if todo.status %}</strike>{% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}
