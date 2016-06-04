@@ -34,6 +34,7 @@ session = DBSession()
 # Create anti-forgery state token
 @app.route('/login')
 def showLogin():
+    """Creates state string and renders login.html"""
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
@@ -43,6 +44,7 @@ def showLogin():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    """Connect a google account and store to login_state"""
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -135,6 +137,7 @@ def gconnect():
 
 
 def createUser(login_session):
+    """Creates a User"""
     newUser = User(name=login_session['username'], email=login_session[
                    'email'], picture=login_session['picture'])
     session.add(newUser)
@@ -144,11 +147,13 @@ def createUser(login_session):
 
 
 def getUserInfo(user_id):
+    """Get user info based on user_id"""
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
+    """Get user ID based on email"""
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
@@ -159,6 +164,7 @@ def getUserID(email):
 # DISCONNECT - Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
+    """Disconnects from a google account"""
         # Only disconnect a connected user.
     credentials = login_session.get('credentials')
     if credentials is None:
@@ -166,7 +172,7 @@ def gdisconnect():
             json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    access_token = credentials.access_token
+    access_token = credentials # we store only the access_token
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
@@ -192,6 +198,7 @@ def gdisconnect():
 # JSON route
 @app.route('/todos/JSON')
 def showTodosJSON():
+    """Returns the todos in a JSON format"""
     todos = session.query(TodoItem)
     return jsonify(todos=[t.serialize for t in todos])
 
@@ -199,15 +206,18 @@ def showTodosJSON():
 @app.route('/')
 @app.route('/todos')
 def showTodos():
+    """Renders to todos by todo category"""
     if 'username' not in login_session:
         return redirect('/login')
     todos = session.query(TodoItem)
     categories = session.query(Category)
-    return render_template('todos.html', todos=todos, categories=categories, user_id=login_session['user_id'])
+    return render_template('todos.html', todos=todos,
+        categories=categories, user_id=login_session['user_id'])
 
 # delete a todo
 @app.route('/todo/<int:todo_id>/delete', methods=['GET'])
 def deleteTodo(todo_id):
+    """Delete a todo"""
     if 'username' not in login_session:
         return redirect('/login')
     todo = session.query(TodoItem).filter_by(id=todo_id).one()
@@ -224,6 +234,7 @@ def deleteTodo(todo_id):
 # update (toggle) a todo
 @app.route('/todo/<int:todo_id>/toggle', methods=['GET'])
 def toggleTodo(todo_id):
+    """Update (toggle) a todo"""
     if 'username' not in login_session:
         return redirect('/login')
     todo = session.query(TodoItem).filter_by(id=todo_id).one()
@@ -236,6 +247,7 @@ def toggleTodo(todo_id):
 # create a todo
 @app.route('/todo/<int:category_id>/new/', methods=['GET', 'POST'])
 def newTodo(category_id):
+    """Creates a new todo"""
     if 'username' not in login_session:
         return redirect('/login')
     category = session.query(Category).filter_by(id=category_id).one()
@@ -248,6 +260,7 @@ def newTodo(category_id):
     else:
         return render_template('newTodo.html', category=category)
 
+# TODO: implement creating/deleteing categories
 # delete a category
 # @app.route('/category/<int:category_id>/delete', methods=['GET'])
 # def deleteCategory(category_id):
