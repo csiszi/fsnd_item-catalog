@@ -279,7 +279,7 @@ def newTodo(category_id):
 
 
 if __name__ == '__main__':
-    print 'test'
     app.secret_key = 'super_secret_key'
+    login_session.init_app(app)
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
