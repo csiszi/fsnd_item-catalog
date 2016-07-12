@@ -18,7 +18,7 @@ import requests
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+    open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Family todos"
 
 
@@ -279,6 +279,7 @@ def newTodo(category_id):
 
 
 if __name__ == '__main__':
+    print 'test'
     app.secret_key = 'super_secret_key'
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
