@@ -16,7 +16,6 @@ from flask import make_response
 import requests
 
 app = Flask(__name__)
-app.secret_key = 'super_secret_key'
 
 CLIENT_ID = json.loads(
     open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
@@ -279,6 +278,7 @@ def newTodo(category_id):
 #     session.commit()
 #     return redirect(url_for('showTodos'))
 
+app.secret_key = 'GEZzWSTby1YtWK2wrES59Cn-'
 
 if __name__ == '__main__':
     # app.secret_key = 'super_secret_key'
