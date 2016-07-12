@@ -55,7 +55,7 @@ class TodoItem(Base):
         }
 
 
-engine = create_engine('postgresql://catalog@localhost:5432/tododb')
+engine = create_engine('postgresql://catalog:@localhost:5432/tododb')
 
 
 Base.metadata.create_all(engine)

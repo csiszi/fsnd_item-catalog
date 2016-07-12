@@ -23,7 +23,7 @@ APPLICATION_NAME = "Family todos"
 
 
 # Connect to Database and create database session
-engine = create_engine('postgresql://catalog@localhost:5432/tododb')
+engine = create_engine('postgresql://catalog:@localhost:5432/tododb')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
