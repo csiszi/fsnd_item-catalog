@@ -37,9 +37,9 @@ session = DBSession()
 @app.route('/login')
 def showLogin():
     """Creates state string and renders login.html"""
+    return app['secret_key']
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
-    login_session['secret_key'] = 'super_secret_key'
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
     return render_template('login.html', STATE=state)
