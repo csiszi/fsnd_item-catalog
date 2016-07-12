@@ -279,6 +279,7 @@ def newTodo(category_id):
 #     return redirect(url_for('showTodos'))
 
 app.secret_key = 'GEZzWSTby1YtWK2wrES59Cn-'
+app.config['SECRET_KEY'] = 'GEZzWSTby1YtWK2wrES59Cn-'
 
 if __name__ == '__main__':
     # app.secret_key = 'super_secret_key'
