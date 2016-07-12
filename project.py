@@ -16,6 +16,7 @@ from flask import make_response
 import requests
 
 app = Flask(__name__)
+app.secret_key = 'super_secret_key'
 
 CLIENT_ID = json.loads(
     open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
@@ -280,7 +281,6 @@ def newTodo(category_id):
 
 
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
-    login_session.init_app(app)
+    # app.secret_key = 'super_secret_key'
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
