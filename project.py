@@ -23,15 +23,17 @@ APPLICATION_NAME = "Family todos"
 
 
 # Connect to Database and create database session
-engine = create_engine('sqlite:///tododb.db')
+engine = create_engine('postgresql://catalog@localhost:5432/tododb')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-## login, gconnect & gdisconnect credits to the authentication course
+# login, gconnect & gdisconnect credits to the authentication course
 
 # Create anti-forgery state token
+
+
 @app.route('/login')
 def showLogin():
     """Creates state string and renders login.html"""
@@ -165,14 +167,14 @@ def getUserID(email):
 @app.route('/gdisconnect')
 def gdisconnect():
     """Disconnects from a google account"""
-        # Only disconnect a connected user.
+    # Only disconnect a connected user.
     credentials = login_session.get('credentials')
     if credentials is None:
         response = make_response(
             json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    access_token = credentials # we store only the access_token
+    access_token = credentials  # we store only the access_token
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
@@ -196,13 +198,15 @@ def gdisconnect():
         return response
 
 # JSON route
+
+
 @app.route('/todos/JSON')
 def showTodosJSON():
     """Returns the todos in a JSON format"""
     todos = session.query(TodoItem)
     return jsonify(todos=[t.serialize for t in todos])
 
-# main route
+
 @app.route('/')
 @app.route('/todos')
 def showTodos():
@@ -212,9 +216,10 @@ def showTodos():
     todos = session.query(TodoItem)
     categories = session.query(Category)
     return render_template('todos.html', todos=todos,
-        categories=categories, user_id=login_session['user_id'])
+                           categories=categories,
+                           user_id=login_session['user_id'])
 
-# delete a todo
+
 @app.route('/todo/<int:todo_id>/delete', methods=['GET'])
 def deleteTodo(todo_id):
     """Delete a todo"""
@@ -244,7 +249,7 @@ def toggleTodo(todo_id):
     flash('Todo toggled')
     return redirect(url_for('showTodos'))
 
-# create a todo
+
 @app.route('/todo/<int:category_id>/new/', methods=['GET', 'POST'])
 def newTodo(category_id):
     """Creates a new todo"""
@@ -252,7 +257,8 @@ def newTodo(category_id):
         return redirect('/login')
     category = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
-        newTodo = TodoItem(name=request.form['name'], category_id=category_id, user_id=login_session['user_id'])
+        newTodo = TodoItem(name=request.form['name'], category_id=category_id,
+                           user_id=login_session['user_id'])
         session.add(newTodo)
         session.commit()
         flash('todo created')
