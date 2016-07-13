@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, TodoItem, User
 
 from flask import session as login_session
+from flask.ext.session import Session
 import random
 import string
 
@@ -16,6 +17,7 @@ from flask import make_response
 import requests
 
 app = Flask(__name__)
+sess = Session()
 
 CLIENT_ID = json.loads(
     open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
@@ -277,10 +279,13 @@ def newTodo(category_id):
 #     session.commit()
 #     return redirect(url_for('showTodos'))
 
-app.secret_key = 'thisissecret'
+# app.secret_key = 'thisissecret'
 # app.config['SECRET_KEY'] = 'GEZzWSTby1YtWK2wrES59Cn-'
 
 if __name__ == '__main__':
-    # app.secret_key = 'super_secret_key'
+    app.secret_key = 'super_secret_key'
+    app.config['SESSION_TYPE'] = 'filesystem'
+
+    sess.init_app(app)
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
