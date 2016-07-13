@@ -17,7 +17,9 @@ from flask import make_response
 import requests
 
 app = Flask(__name__)
-sess = Session()
+SESSION_TYPE = 'filesystem'
+app.config.from_object(__name__)
+Session(app)
 
 CLIENT_ID = json.loads(
     open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
@@ -284,8 +286,8 @@ def newTodo(category_id):
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
-    app.config['SESSION_TYPE'] = 'filesystem'
+    # app.config['SESSION_TYPE'] = 'filesystem'
 
-    sess.init_app(app)
+    # sess.init_app(app)
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
