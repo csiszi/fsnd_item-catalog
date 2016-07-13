@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, TodoItem, User
 
 from flask import session as login_session
-from flask.ext.session import Session
+# from flask.ext.session import Session
 import random
 import string
 
@@ -17,9 +17,9 @@ from flask import make_response
 import requests
 
 app = Flask(__name__)
-SESSION_TYPE = 'filesystem'
-app.config.from_object(__name__)
-Session(app)
+# SESSION_TYPE = 'filesystem'
+# app.config.from_object(__name__)
+# Session(app)
 
 CLIENT_ID = json.loads(
     open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
